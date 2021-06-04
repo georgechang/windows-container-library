@@ -1,0 +1,23 @@
+metricbeat.config.modules:
+  path: C:\metricbeat\modules.d\*.yml
+  reload.enabled: false
+
+setup.template.settings:
+  index.number_of_shards: 1
+  index.codec: best_compression
+
+setup.kibana:
+  host: ${KIBANA_HOST}
+
+output.elasticsearch:
+  hosts: "${ELASTICSEARCH_HOSTS}"
+
+processors:
+  - add_docker_metadata:
+      host: "npipe:////./pipe/docker_engine"
+
+metricbeat.autodiscover:
+  providers:
+    - type: docker
+      host: "npipe:////./pipe/docker_engine"
+      hints.enabled: true

@@ -1,0 +1,27 @@
+filebeat.config:
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: false
+
+filebeat.inputs:
+  - type: container
+    paths:
+      - "/logs/*/*.log"
+
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      host: "npipe:////./pipe/docker_engine"
+      hints.enabled: true
+
+processors:
+  - add_docker_metadata:
+      host: "npipe:////./pipe/docker_engine"
+      match_source: true
+      match_source_index: 2
+
+output.elasticsearch:
+  hosts: "${ELASTICSEARCH_HOSTS}"
+
+setup.kibana:
+  host: ${KIBANA_HOST}
